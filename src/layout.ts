@@ -18,7 +18,6 @@ function generateSudoku(): void {
 
     // for mobile
     input.inputMode = "numeric";
-    input.pattern = "^[1-9]$";
 
     input.addEventListener("keydown", function (event) {
 

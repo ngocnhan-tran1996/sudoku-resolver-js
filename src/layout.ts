@@ -84,6 +84,7 @@ function generateSudoku(): void {
           break;
 
         default:
+          this.value = "";
           event.preventDefault();
           break;
       }

@@ -16,6 +16,10 @@ function generateSudoku(): void {
     input.classList.add("cell");
     input.setAttribute("autocomplete", "off");
 
+    // for mobile
+    input.inputMode = "numeric";
+    input.pattern = "^[1-9]$";
+
     input.addEventListener("keydown", function (event) {
 
       if (/^[1-9]$/.test(event.key)) {

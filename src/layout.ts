@@ -25,6 +25,10 @@ function generateSudoku(): void {
 
         this.value = event.key;
         event.preventDefault();
+      } else if (!/^[1-9]$/.test(this.value)) {
+
+        this.value = ""
+        event.preventDefault();
       }
 
       const index = cells.indexOf(this);
@@ -84,7 +88,6 @@ function generateSudoku(): void {
           break;
 
         default:
-          this.value = "";
           event.preventDefault();
           break;
       }

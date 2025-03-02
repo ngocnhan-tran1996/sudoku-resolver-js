@@ -74,7 +74,10 @@ function generateSudoku(): void {
         case "Backspace":
         case "Delete":
           this.value = "";
-          event.preventDefault();
+          break;
+
+        case "Tab":
+          cells[index].focus();
           break;
 
         default:

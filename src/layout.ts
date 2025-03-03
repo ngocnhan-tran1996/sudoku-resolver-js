@@ -1,7 +1,9 @@
 import {solveSudoku} from "./sudoku.ts";
 
-const sudokuId = "sudoku-element-";
-const lastColIndex = 8;
+const sudokuId: string = "sudoku-element-";
+const lastColIndex: number = 8;
+const emptyResultDiv = (): HTMLDivElement => document.querySelector<HTMLDivElement>('#empty-result')!;
+const sudokuInputs = (): NodeListOf<HTMLInputElement> => document.querySelectorAll<HTMLInputElement>(`input[id^='${sudokuId}']`);
 
 function generateSudoku(): void {
 
@@ -9,7 +11,7 @@ function generateSudoku(): void {
   const cells: HTMLInputElement[] = [];
 
   for (let i = 0; i < 81; i++) {
-    let input = document.createElement("input");
+    const input = document.createElement("input");
     input.id = sudokuId + i;
     input.type = "text";
     input.maxLength = 1;
@@ -18,6 +20,16 @@ function generateSudoku(): void {
 
     // for mobile
     input.inputMode = "numeric";
+
+    input.addEventListener("keypress", function (event) {
+
+      if (/^[1-9]$/.test(event.key)) {
+
+        this.value = event.key;
+      }
+
+      event.preventDefault();
+    });
 
     input.addEventListener("keydown", function (event) {
 
@@ -102,7 +114,7 @@ function solve(element: HTMLButtonElement): void {
     let row = 0;
     let col = 0;
     const sudoku: number[][] = [];
-    document.querySelectorAll<HTMLInputElement>(`input[id^='${sudokuId}']`).forEach((input, index) => {
+    sudokuInputs().forEach((input, index) => {
 
       if (sudoku[row]?.length === 9) {
 
@@ -122,23 +134,30 @@ function solve(element: HTMLButtonElement): void {
     const isEmptySudoku = sudoku.every(values => values.every(value => value === 0));
     if (isEmptySudoku) {
 
-      document.getElementById("empty-result")!.innerHTML = "<div>Please input your sudoku</div>"
+      emptyResultDiv().innerText = "Please input your sudoku"
       return;
     }
 
-    solveSudoku(sudoku, 0, 0)?.forEach((values, resultRow) =>
-        values.forEach((value, resultCol) => document.querySelector<HTMLInputElement>("#" + sudokuId + (resultRow * 9 + resultCol))!.value = String(value))
-    )
+    const result = solveSudoku(sudoku, 0, 0)
+    if (result) {
 
-    document.querySelector<HTMLDivElement>('#empty-result')!.innerHTML = "";
+      emptyResultDiv().innerText = "";
+      result.forEach((values, resultRow) =>
+          values.forEach((value, resultCol) => document.querySelector<HTMLInputElement>("#" + sudokuId + (resultRow * 9 + resultCol))!.value = String(value))
+      )
+      return;
+    }
+
+    emptyResultDiv().innerText = "Could not solve sudoku";
   });
 }
 
 function reset(element: HTMLButtonElement): void {
 
   element.addEventListener('click', () => {
-    document.querySelectorAll<HTMLInputElement>(`input[id^='${sudokuId}']`).forEach(input => input.value = '');
-    document.querySelector<HTMLDivElement>('#empty-result')!.innerHTML = "";
+
+    emptyResultDiv().innerText = "";
+    sudokuInputs().forEach(input => input.value = "");
   })
 }
 

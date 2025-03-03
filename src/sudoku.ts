@@ -1,5 +1,5 @@
 const square = [...Array(3).keys()];
-const numbers = Array.from({length: 9}, (_, i) => i + 1);
+const numbers = [...Array(9).keys()].map(i => i + 1);
 
 export function solveSudoku(sudoku: number[][], row: number, col: number): number[][] | null {
 
@@ -36,8 +36,8 @@ export function solveSudoku(sudoku: number[][], row: number, col: number): numbe
       }
   )
 
-  const startRow = row - (row % 3);
-  const startCol = col - (col % 3);
+  const startRow = row - (row % square.length);
+  const startCol = col - (col % square.length);
 
   square.forEach(i => square.forEach(j => addIgnoreZero(existedNumbers, sudoku[startRow + i][startCol + j])));
   const solved = numbers.filter(i => !existedNumbers.has(i)).some(number => {

@@ -25,7 +25,7 @@ function generateSudoku(): void {
 
       document.getElementById("empty-result")!.innerHTML = `eventKey ${event.key} - eventCode - ${event.code} - ${event.charCode}  - ${event.which}`
 
-      if (event.key === "Unidentified") {
+      if (event.key === undefined) {
 
         event.preventDefault();
         return;

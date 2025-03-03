@@ -1,6 +1,6 @@
 # Sudoku Resolver
 
-This repository has only purpose. This is to help me solve sudoku online game.
+This repository has only one purpose. This is to help me solve sudoku online game.
 
 Typing...
 - [Vite](https://vite.dev/guide/#getting-started)

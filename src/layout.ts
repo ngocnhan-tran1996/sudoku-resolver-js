@@ -104,7 +104,8 @@ function solve(element: HTMLButtonElement): void {
     let row = 0;
     let col = 0;
     const sudoku: number[][] = [];
-    sudokuInputs().forEach((input, index) => {
+
+    for (const [index, input] of sudokuInputs().entries()) {
 
       if (index !== 0 && index % 9 === 0) {
 
@@ -113,14 +114,21 @@ function solve(element: HTMLButtonElement): void {
       }
 
       sudoku[row] = sudoku[row] ?? [];
+
+      if (input.value !== "" && !/^[1-9]$/.test(input.value)) {
+
+        emptyResultDiv().innerText = "Sudoku must contain number";
+        return;
+      }
+
       sudoku[row][col] = input.value === "" ? 0 : Number(input.value);
       col++;
-    })
+    }
 
     const isEmptySudoku = sudoku.every(values => values.every(value => value === 0));
     if (isEmptySudoku) {
 
-      emptyResultDiv().innerText = "Please input your sudoku"
+      emptyResultDiv().innerText = "Please input your sudoku";
       return;
     }
 

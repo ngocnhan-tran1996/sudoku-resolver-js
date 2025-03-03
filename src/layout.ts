@@ -23,9 +23,9 @@ function generateSudoku(): void {
 
     input.addEventListener("keydown", function (event) {
 
-      document.getElementById("empty-result")!.innerHTML = `eventKey ${event.key} - eventCode - ${event.type} - ${event.charCode}  - ${event.which}`
+      document.getElementById("empty-result")!.innerHTML = `eventKey ${event.key} - eventCode - ${typeof event.key}`
 
-      if (!event.key) {
+      if (event.key || event.key === "Unidentified") {
 
         event.preventDefault();
         return;

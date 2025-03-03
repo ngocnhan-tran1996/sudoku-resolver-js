@@ -23,7 +23,7 @@ function generateSudoku(): void {
 
     input.addEventListener("keydown", function (event) {
 
-      document.getElementById("empty-result").innerHTML= `eventKey ${event.key} - eventCode - ${event.code} - ${event.charCode}  - ${event.which}`
+      document.getElementById("empty-result")!.innerHTML = `eventKey ${event.key} - eventCode - ${event.code} - ${event.charCode}  - ${event.which}`
       if (/^[1-9]$/.test(event.key)) {
 
         this.value = event.key;

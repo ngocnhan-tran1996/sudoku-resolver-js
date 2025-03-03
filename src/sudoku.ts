@@ -3,6 +3,18 @@ const numbers = [...Array(9).keys()].map(i => i + 1);
 
 export function solveSudoku(sudoku: number[][], row: number, col: number): number[][] | null {
 
+  // valid sudoku
+  const horizontalSudoku: number[][] = [];
+  sudoku.forEach((values, row) => values.forEach((value, col) => {
+
+    horizontalSudoku[col] = horizontalSudoku[col] ?? [];
+    horizontalSudoku[col][row] = value
+  }));
+  if (validate(sudoku) || validate(horizontalSudoku) || validateSquare(sudoku)) {
+
+    return sudoku;
+  }
+
   const lastRow = sudoku.length - 1;
   const lastCol = sudoku.length;
   if (row === lastRow && col === lastCol) {
@@ -61,4 +73,36 @@ function addIgnoreZero(collection: Set<number>, element: number): void {
     collection.add(element)
   }
 
+}
+
+function validate(sudoku: number[][]): boolean {
+
+  return sudoku.some(values => {
+
+    const rowNumbers = values.filter(value => value !== 0);
+    return new Set<number>(rowNumbers).size < rowNumbers.length;
+  });
+}
+
+function validateSquare(sudoku: number[][]): boolean {
+
+  for (let row = 0; row < 3; row++) {
+
+    const startRow = row * 3;
+    for (let col = 0; col < 3; col++) {
+
+      const existedNumbers: number[] = [];
+      const startCol = col * 3;
+      square.forEach(i => square.forEach(j => existedNumbers.push(sudoku[startRow + i][startCol + j])));
+
+      // prevent duplicate value
+      const rowNumbers = existedNumbers.filter(value => value !== 0);
+      if (new Set(rowNumbers).size < rowNumbers.length) {
+
+        return true;
+      }
+    }
+  }
+
+  return false;
 }

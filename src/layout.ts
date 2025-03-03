@@ -21,6 +21,17 @@ function generateSudoku(): void {
     // for mobile
     input.inputMode = "numeric";
 
+    input.addEventListener("keyup", function (event) {
+
+      if (/^[1-9]$/.test(event.key)) {
+
+        this.value = event.key;
+      }
+
+      event.preventDefault();
+    });
+
+
     input.addEventListener("keypress", function (event) {
 
       if (/^[1-9]$/.test(event.key)) {
@@ -116,17 +127,13 @@ function solve(element: HTMLButtonElement): void {
     const sudoku: number[][] = [];
     sudokuInputs().forEach((input, index) => {
 
-      if (sudoku[row]?.length === 9) {
+      if (index !== 0 && index % 9 === 0) {
 
         row++;
-      }
-
-      if (index % 9 === 0) {
-
-        sudoku[row] = [];
         col = 0;
       }
 
+      sudoku[row] = sudoku[row] ?? [];
       sudoku[row][col] = input.value === "" ? 0 : Number(input.value);
       col++;
     })

@@ -1,4 +1,4 @@
-import {solveSudoku} from "./sudoku.ts";
+import {hasSameArray, solveSudoku} from "./sudoku.ts";
 
 const sudokuId: string = "sudoku-element-";
 const lastColIndex: number = 8;
@@ -134,7 +134,7 @@ function solve(element: HTMLButtonElement): void {
 
       if (input.value !== "" && !onlyDigitValidator(input.value)) {
 
-        emptyResultDiv().innerText = "Sudoku must contain number";
+        emptyResultDiv().innerText = "Sudoku chỉ chứa toàn số";
         return;
       }
 
@@ -145,15 +145,16 @@ function solve(element: HTMLButtonElement): void {
     const isEmptySudoku = sudoku.every(values => values.every(value => value === 0));
     if (isEmptySudoku) {
 
-      emptyResultDiv().innerText = "Please input your sudoku";
+      emptyResultDiv().innerText = "Hãy nhập vài số";
       return;
     }
 
+    const backupSudoku = structuredClone(sudoku);
     const result = solveSudoku(sudoku, 0, 0)
-    if (result) {
+    if (!hasSameArray(sudoku, backupSudoku)) {
 
       emptyResultDiv().innerText = "";
-      result.forEach((values, resultRow) =>
+      sudoku.forEach((values, resultRow) =>
           values.forEach((value, resultCol) => {
 
             if (value !== 0) {
@@ -166,7 +167,10 @@ function solve(element: HTMLButtonElement): void {
       return;
     }
 
-    emptyResultDiv().innerText = "Could not solve sudoku";
+    if (result) {
+
+      emptyResultDiv().innerText = result;
+    }
   });
 }
 

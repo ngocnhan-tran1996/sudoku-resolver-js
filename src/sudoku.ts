@@ -1,7 +1,7 @@
 const square = [...Array(3).keys()];
 const numbers = [...Array(9).keys()].map(i => i + 1);
 
-export function solveSudoku(sudoku: number[][], row: number, col: number): number[][] | null {
+function solveSudoku(sudoku: number[][], row: number, col: number): string | null {
 
   // valid sudoku
   const horizontalSudoku: number[][] = [];
@@ -12,14 +12,14 @@ export function solveSudoku(sudoku: number[][], row: number, col: number): numbe
   }));
   if (validate(sudoku) || validate(horizontalSudoku) || validateSquare(sudoku)) {
 
-    return sudoku;
+    return "Trùng số ở hàng hoặc cột hoặc ô";
   }
 
   const lastRow = sudoku.length - 1;
   const lastCol = sudoku.length;
   if (row === lastRow && col === lastCol) {
 
-    return sudoku;
+    return null;
   }
 
   // If last column of the row go to the next row
@@ -55,7 +55,7 @@ export function solveSudoku(sudoku: number[][], row: number, col: number): numbe
   const solved = numbers.filter(i => !existedNumbers.has(i)).some(number => {
 
     sudoku[row][col] = number;
-    if (solveSudoku(sudoku, row, col + 1)) {
+    if (!solveSudoku(sudoku, row, col + 1)) {
       return true;
     }
 
@@ -63,7 +63,7 @@ export function solveSudoku(sudoku: number[][], row: number, col: number): numbe
     sudoku[row][col] = 0;
   });
 
-  return solved ? sudoku : null;
+  return solved ? null : "Không thể giải";
 }
 
 function addIgnoreZero(collection: Set<number>, element: number): void {
@@ -106,3 +106,15 @@ function validateSquare(sudoku: number[][]): boolean {
 
   return false;
 }
+
+function hasSameArray(a: number[][], b: number[][]): boolean {
+
+  if (a.length === b.length) {
+
+    return a.length === b.length && a.every((elements, i) => elements.every((element, j) => element === b[i][j]))
+  }
+
+  return false;
+}
+
+export {solveSudoku, hasSameArray}

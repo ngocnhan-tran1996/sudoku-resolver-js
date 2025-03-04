@@ -4,6 +4,7 @@ const sudokuId: string = "sudoku-element-";
 const lastColIndex: number = 8;
 const emptyResultDiv = (): HTMLDivElement => document.querySelector<HTMLDivElement>('#empty-result')!;
 const sudokuInputs = (): NodeListOf<HTMLInputElement> => document.querySelectorAll<HTMLInputElement>(`input[id^='${sudokuId}']`);
+const onlyDigitValidator = (value: string) => /^[1-9]$/.test(value);
 
 function generateSudoku(): void {
 
@@ -20,6 +21,23 @@ function generateSudoku(): void {
 
     // for mobile
     input.inputMode = "numeric";
+
+    input.addEventListener("input", function (this: HTMLInputElement & { oldValue: string }) {
+
+      if (onlyDigitValidator(this.value)) {
+
+        this.oldValue = this.value;
+        return;
+      }
+
+      if (this.hasOwnProperty("oldValue")) {
+
+        this.value = this.oldValue;
+        return;
+      }
+
+      this.value = "";
+    });
 
     input.addEventListener("keydown", function (event) {
 
@@ -115,7 +133,7 @@ function solve(element: HTMLButtonElement): void {
 
       sudoku[row] = sudoku[row] ?? [];
 
-      if (input.value !== "" && !/^[1-9]$/.test(input.value)) {
+      if (input.value !== "" && !onlyDigitValidator(input.value)) {
 
         emptyResultDiv().innerText = "Sudoku must contain number";
         return;

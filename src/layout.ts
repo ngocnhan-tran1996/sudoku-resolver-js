@@ -155,8 +155,12 @@ function solve(element: HTMLButtonElement): void {
       emptyResultDiv().innerText = "";
       result.forEach((values, resultRow) =>
           values.forEach((value, resultCol) => {
-            const input = <HTMLInputElement>document.getElementById(sudokuId + (resultRow * 9 + resultCol))!;
-            input.value = String(value);
+
+            if (value !== 0) {
+
+              const input = <HTMLInputElement>document.getElementById(sudokuId + (resultRow * 9 + resultCol))!;
+              input.value = String(value);
+            }
           })
       )
       return;

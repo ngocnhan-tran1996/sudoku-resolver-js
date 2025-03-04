@@ -2,7 +2,7 @@ import {solveSudoku} from "./sudoku.ts";
 
 const sudokuId: string = "sudoku-element-";
 const lastColIndex: number = 8;
-const emptyResultDiv = (): HTMLDivElement => document.querySelector<HTMLDivElement>('#empty-result')!;
+const emptyResultDiv = (): HTMLElement => document.getElementById('empty-result')!;
 const sudokuInputs = (): NodeListOf<HTMLInputElement> => document.querySelectorAll<HTMLInputElement>(`input[id^='${sudokuId}']`);
 const onlyDigitValidator = (value: string) => /^[1-9]$/.test(value);
 
@@ -154,7 +154,10 @@ function solve(element: HTMLButtonElement): void {
 
       emptyResultDiv().innerText = "";
       result.forEach((values, resultRow) =>
-          values.forEach((value, resultCol) => document.querySelector<HTMLInputElement>("#" + sudokuId + (resultRow * 9 + resultCol))!.value = String(value))
+          values.forEach((value, resultCol) => {
+            const input = <HTMLInputElement>document.getElementById(sudokuId + (resultRow * 9 + resultCol))!;
+            input.value = String(value);
+          })
       )
       return;
     }

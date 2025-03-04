@@ -1,7 +1,7 @@
 import './style.css'
 import {generateSudoku, reset, solve} from './layout.ts'
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+document.getElementById("app")!.innerHTML = `
   <div class="sudoku-container" id="sudoku-board"></div>
   <div class="buttons">
     <button id="reset">RESET</button>
@@ -12,5 +12,5 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 generateSudoku();
 
-reset(document.querySelector<HTMLButtonElement>('#reset')!);
-solve(document.querySelector<HTMLButtonElement>('#solve')!);
+reset(<HTMLButtonElement>document.getElementById("reset")!);
+solve(<HTMLButtonElement>document.getElementById("solve")!);

@@ -44,7 +44,6 @@ function generateSudoku(): void {
       if (/^[1-9]$/.test(event.key)) {
 
         this.value = event.key;
-        event.preventDefault();
         return;
       }
 

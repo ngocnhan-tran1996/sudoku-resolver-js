@@ -16,8 +16,8 @@ function generateSudoku(): void {
     input.id = sudokuId + i;
     input.type = "text";
     input.maxLength = 1;
+    input.autocomplete = "off";
     input.classList.add("cell");
-    input.setAttribute("autocomplete", "off");
 
     // for mobile
     input.inputMode = "numeric";
@@ -44,6 +44,7 @@ function generateSudoku(): void {
       if (/^[1-9]$/.test(event.key)) {
 
         this.value = event.key;
+        this.classList.add("filled");
         return;
       }
 
@@ -97,6 +98,7 @@ function generateSudoku(): void {
         case "Backspace":
         case "Delete":
           this.value = "";
+          this.classList.remove("filled");
           break;
 
         case "Tab":
@@ -179,7 +181,11 @@ function reset(element: HTMLButtonElement): void {
   element.addEventListener('click', () => {
 
     emptyResultDiv().innerText = "";
-    sudokuInputs().forEach(input => input.value = "");
+    sudokuInputs().forEach(input => {
+
+      input.value = ""
+      input.classList.remove("filled");
+    });
   })
 }
 

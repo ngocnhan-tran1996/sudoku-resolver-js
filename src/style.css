@@ -49,6 +49,10 @@ body {
   box-shadow: 0 0 4px rgba(24, 144, 255, 0.5);
 }
 
+.filled {
+  background-color: #d9f7be !important;
+}
+
 .buttons {
   margin-top: 20px;
   display: flex;

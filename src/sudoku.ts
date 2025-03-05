@@ -55,12 +55,14 @@ function solveSudoku(sudoku: number[][], row: number, col: number): string | nul
   const solved = numbers.filter(i => !existedNumbers.has(i)).some(number => {
 
     sudoku[row][col] = number;
-    if (!solveSudoku(sudoku, row, col + 1)) {
-      return true;
+    if (solveSudoku(sudoku, row, col + 1)) {
+
+      // reset value
+      sudoku[row][col] = 0;
+      return;
     }
 
-    // reset value
-    sudoku[row][col] = 0;
+    return true;
   });
 
   return solved ? null : "Không thể giải";

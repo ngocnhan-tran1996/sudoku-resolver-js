@@ -152,10 +152,12 @@ function solve(element: HTMLButtonElement): void {
     }
 
     const backupSudoku = structuredClone(sudoku);
+    const start = performance.now();
     const result = solveSudoku(sudoku, 0, 0)
+    const end = performance.now();
     if (!hasSameArray(sudoku, backupSudoku)) {
 
-      emptyResultDiv().innerText = "";
+      emptyResultDiv().innerText = `Thời gian: ${(end - start).toFixed(2)} mili giây`;
       sudoku.forEach((values, resultRow) =>
           values.forEach((value, resultCol) => {
 

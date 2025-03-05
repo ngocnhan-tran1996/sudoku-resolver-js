@@ -163,6 +163,7 @@ function solve(element: HTMLButtonElement): void {
 
               const input = <HTMLInputElement>document.getElementById(sudokuId + (resultRow * 9 + resultCol))!;
               input.value = String(value);
+              input.disabled = true;
             }
           })
       )
@@ -185,6 +186,7 @@ function reset(element: HTMLButtonElement): void {
 
       input.value = ""
       input.classList.remove("filled");
+      input.disabled = false;
     });
   })
 }

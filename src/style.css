@@ -92,3 +92,29 @@ body {
 .cell:nth-child(n+73):nth-child(-n+81) {
   border-bottom: 3px solid #595959;
 }
+
+.notification {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  color: #333;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+.notification .close-btn {
+  margin-left: 0;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: red;
+}

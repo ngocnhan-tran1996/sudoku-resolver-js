@@ -2,7 +2,6 @@ import {hasSameArray, solveSudoku} from "./sudoku.ts";
 
 const sudokuId: string = "sudoku-element-";
 const lastColIndex: number = 8;
-const emptyResultDiv = (): HTMLElement => document.getElementById('empty-result')!;
 const sudokuInputs = (): NodeListOf<HTMLInputElement> => document.querySelectorAll<HTMLInputElement>(`input[id^='${sudokuId}']`);
 const onlyDigitValidator = (value: string) => /^[1-9]$/.test(value);
 
@@ -136,7 +135,7 @@ function solve(element: HTMLButtonElement): void {
 
       if (input.value !== "" && !onlyDigitValidator(input.value)) {
 
-        emptyResultDiv().innerText = "Sudoku chỉ chứa toàn số";
+        displayNotification("Sudoku chỉ chứa toàn số");
         return;
       }
 
@@ -147,7 +146,7 @@ function solve(element: HTMLButtonElement): void {
     const isEmptySudoku = sudoku.every(values => values.every(value => value === 0));
     if (isEmptySudoku) {
 
-      emptyResultDiv().innerText = "Hãy nhập vài số";
+      displayNotification("Hãy nhập vài số");
       return;
     }
 
@@ -157,7 +156,7 @@ function solve(element: HTMLButtonElement): void {
     const end = performance.now();
     if (!hasSameArray(sudoku, backupSudoku)) {
 
-      emptyResultDiv().innerText = `Thời gian: ${(end - start).toFixed(2)} mili giây`;
+      displayNotification(`Thời gian: ${(end - start).toFixed(2)} mili giây`);
       sudoku.forEach((values, resultRow) =>
           values.forEach((value, resultCol) => {
 
@@ -174,7 +173,7 @@ function solve(element: HTMLButtonElement): void {
 
     if (result) {
 
-      emptyResultDiv().innerText = result;
+      displayNotification(result);
     }
   });
 }
@@ -183,7 +182,6 @@ function reset(element: HTMLButtonElement): void {
 
   element.addEventListener('click', () => {
 
-    emptyResultDiv().innerText = "";
     sudokuInputs().forEach(input => {
 
       input.value = ""
@@ -193,4 +191,23 @@ function reset(element: HTMLButtonElement): void {
   })
 }
 
-export {generateSudoku, solve, reset}
+function hideNotification(element: HTMLButtonElement): void {
+
+  element.addEventListener('click', () => {
+
+    const notification = <HTMLDivElement>document.getElementById("notification");
+    notification.style.display = "none";
+  });
+}
+
+function displayNotification(content: string) {
+
+  document.getElementById("notification-text")!.innerText = content;
+  const notification = <HTMLDivElement>document.getElementById("notification");
+  notification.style.display = "block";
+  setTimeout(() => {
+    notification.style.display = "none";
+  }, 3000);
+}
+
+export {generateSudoku, solve, reset, hideNotification}

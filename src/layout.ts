@@ -1,4 +1,4 @@
-import {hasSameArray, solveSudoku} from "./sudoku.ts";
+import {hasSameArray, solveSudoku, validate} from "./sudoku.ts";
 
 const sudokuId: string = "sudoku-element-";
 const lastColIndex: number = 8;
@@ -135,7 +135,7 @@ function solve(element: HTMLButtonElement): void {
 
       if (input.value !== "" && !onlyDigitValidator(input.value)) {
 
-        displayNotification("Sudoku chỉ chứa toàn số");
+        displayNotification("Vui lòng nhập số");
         return;
       }
 
@@ -146,15 +146,21 @@ function solve(element: HTMLButtonElement): void {
     const isEmptySudoku = sudoku.every(values => values.every(value => value === 0));
     if (isEmptySudoku) {
 
-      displayNotification("Hãy nhập vài số");
+      displayNotification("Vui lòng nhập vài số");
+      return;
+    }
+
+    if (!validate(sudoku)) {
+
+      displayNotification("Trùng số ở hàng hoặc cột hoặc ô");
       return;
     }
 
     const backupSudoku = structuredClone(sudoku);
     const start = performance.now();
-    const result = solveSudoku(sudoku, 0, 0)
+    const result = solveSudoku(sudoku)
     const end = performance.now();
-    if (!hasSameArray(sudoku, backupSudoku)) {
+    if (result && !hasSameArray(sudoku, backupSudoku)) {
 
       displayNotification(`Thời gian: ${(end - start).toFixed(2)} mili giây`);
       sudoku.forEach((values, resultRow) =>
@@ -171,10 +177,7 @@ function solve(element: HTMLButtonElement): void {
       return;
     }
 
-    if (result) {
-
-      displayNotification(result);
-    }
+    displayNotification("Sudoku đã giải hoặc không thể giải");
   });
 }
 

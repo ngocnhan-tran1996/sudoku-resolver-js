@@ -1,112 +1,134 @@
-const square = [...Array(3).keys()];
-const numbers = [...Array(9).keys()].map(i => i + 1);
+const SIZE = 9;
 
-function solveSudoku(sudoku: number[][], row: number, col: number): string | null {
+function solveSudoku(sudoku: number[][]): boolean {
 
-  // valid sudoku
-  const horizontalSudoku: number[][] = [];
-  sudoku.forEach((values, row) => values.forEach((value, col) => {
+  for (let row = 0; row < SIZE; row++) {
+    for (let col = 0; col < SIZE; col++) {
+      if (sudoku[row][col] === 0) {
 
-    horizontalSudoku[col] = horizontalSudoku[col] ?? [];
-    horizontalSudoku[col][row] = value
-  }));
-  if (validate(sudoku) || validate(horizontalSudoku) || validateSquare(sudoku)) {
-
-    return "Trùng số ở hàng hoặc cột hoặc ô";
-  }
-
-  const lastRow = sudoku.length - 1;
-  const lastCol = sudoku.length;
-  if (row === lastRow && col === lastCol) {
-
-    return null;
-  }
-
-  // If last column of the row go to the next row
-  if (col === lastCol) {
-
-    row++;
-    col = 0;
-  }
-
-  if (sudoku[row][col] !== 0) {
-
-    return solveSudoku(sudoku, row, col + 1);
-  }
-
-  const existedNumbers = new Set<number>();
-  sudoku.forEach(
-      (values, key) => {
-
-        if (row === key) {
-
-          values.forEach(value => addIgnoreZero(existedNumbers, value));
-          return;
-        }
-
-        addIgnoreZero(existedNumbers, sudoku[key][col]);
+        return findNumber(sudoku, row, col);
       }
-  )
-
-  const startRow = row - (row % square.length);
-  const startCol = col - (col % square.length);
-
-  square.forEach(i => square.forEach(j => addIgnoreZero(existedNumbers, sudoku[startRow + i][startCol + j])));
-  const solved = numbers.filter(i => !existedNumbers.has(i)).some(number => {
-
-    sudoku[row][col] = number;
-    if (solveSudoku(sudoku, row, col + 1)) {
-
-      // reset value
-      sudoku[row][col] = 0;
-      return;
     }
+  }
 
-    return true;
-  });
-
-  return solved ? null : "Không thể giải";
+  return true;
 }
 
-function addIgnoreZero(collection: Set<number>, element: number): void {
+function findNumber(sudoku: number[][], row: number, col: number): boolean {
 
-  if (element !== 0) {
+  const existedNumbers: boolean[] = [];
+  for (let i = 0; i < SIZE; i++) {
 
-    collection.add(element)
+    if (sudoku[row][i] !== 0) {
+
+      existedNumbers[sudoku[row][i]] = true;
+    }
+
+    if (sudoku[i][col] !== 0) {
+
+      existedNumbers[sudoku[i][col]] = true;
+    }
+
+    const startRow: number = Math.trunc(row / 3) * 3 + Math.trunc(i / 3);
+    const startCol: number = Math.trunc(col / 3) * 3 + Math.trunc(i % 3);
+    if (sudoku[startRow][startCol] !== 0) {
+
+      existedNumbers[sudoku[startRow][startCol]] = true;
+    }
   }
 
+  return [...Array(9).keys()].map(value => value + 1).filter(value => !existedNumbers[value])
+  .some(value => {
+
+    sudoku[row][col] = value
+
+    if (solveSudoku(sudoku)) {
+
+      return true;
+    }
+
+    sudoku[row][col] = 0;
+  });
 }
 
 function validate(sudoku: number[][]): boolean {
 
-  return sudoku.some(values => {
-
-    const rowNumbers = values.filter(value => value !== 0);
-    return new Set<number>(rowNumbers).size < rowNumbers.length;
-  });
+  return checkRows(sudoku) && checkColumns(sudoku) && checkSquares(sudoku);
 }
 
-function validateSquare(sudoku: number[][]): boolean {
+function checkRows(sudoku: number[][]): boolean {
 
-  for (let row = 0; row < 3; row++) {
+  for (const values of sudoku) {
 
-    const startRow = row * 3;
-    for (let col = 0; col < 3; col++) {
+    const seen: boolean[] = [];
+    for (const value of values) {
 
-      const existedNumbers: number[] = [];
-      const startCol = col * 3;
-      square.forEach(i => square.forEach(j => existedNumbers.push(sudoku[startRow + i][startCol + j])));
+      if (value === 0) {
 
-      // prevent duplicate value
-      const rowNumbers = existedNumbers.filter(value => value !== 0);
-      if (new Set(rowNumbers).size < rowNumbers.length) {
+        continue;
+      }
 
-        return true;
+      if (seen[value]) {
+
+        return false;
+      }
+
+      seen[value] = true;
+    }
+  }
+
+  return true
+}
+
+function checkColumns(sudoku: number[][]): boolean {
+
+  for (let col = 0; col < SIZE; col++) {
+
+    const seen: boolean[] = [];
+    for (let row = 0; row < SIZE; row++) {
+
+      const number = sudoku[row][col];
+      if (number !== 0) {
+
+        if (seen[number]) {
+
+          return false;
+        }
+
+        seen[number] = true;
       }
     }
   }
 
-  return false;
+  return true;
+}
+
+function checkSquares(sudoku: number[][]): boolean {
+
+  for (let block = 0; block < SIZE; block++) {
+
+    const seen: boolean[] = [];
+    const startRow = Math.trunc(block / 3) * 3;
+    const startCol = Math.trunc(block % 3) * 3;
+    for (let i = 0; i < SIZE; i++) {
+
+      const row = startRow + Math.trunc(i / 3);
+      const col = startCol + Math.trunc(i % 3);
+
+      const number = sudoku[row][col];
+      if (number !== 0) {
+
+        if (seen[number]) {
+
+          return false;
+        }
+
+        seen[number] = true;
+      }
+    }
+  }
+
+  return true;
 }
 
 function hasSameArray(a: number[][], b: number[][]): boolean {
@@ -119,4 +141,4 @@ function hasSameArray(a: number[][], b: number[][]): boolean {
   return false;
 }
 
-export {solveSudoku, hasSameArray}
+export {validate, solveSudoku, hasSameArray}

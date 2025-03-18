@@ -37,18 +37,24 @@ function findNumber(sudoku: number[][], row: number, col: number): boolean {
     }
   }
 
-  return [...Array(9).keys()].map(value => value + 1).filter(value => !existedNumbers[value])
-  .some(value => {
+  for (let number = 1; number <= SIZE; number++) {
 
-    sudoku[row][col] = value
+    if (existedNumbers[number]) {
+
+      continue;
+    }
+
+    sudoku[row][col] = number; // Place number
 
     if (solveSudoku(sudoku)) {
 
-      return true;
+      return true; // Solved
     }
 
-    sudoku[row][col] = 0;
-  });
+    sudoku[row][col] = 0; // Backtrack
+  }
+
+  return false;
 }
 
 function validate(sudoku: number[][]): boolean {
